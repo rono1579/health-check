@@ -3,20 +3,42 @@
 import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { HelpCircle, Bot, Sparkles, ArrowRight } from "lucide-react"
+import { 
+  HelpCircle, 
+  Bot, 
+  Sparkles, 
+  ArrowRight, 
+  Heart, 
+  Brain, 
+  Users, 
+  Shield,
+  Star,
+  Quote,
+  MessageSquare,
+  TrendingUp,
+  CheckCircle
+} from "lucide-react"
 import Link from "next/link"
-import {motivationalQuotes, features, reviews} from "./quotes.js"
+import { motivationalQuotes, features, reviews } from "./quotes.js"
 import Newsletter from "./_partials/newsletter"
 
 export default function HomePage() {
   const [currentQuote, setCurrentQuote] = useState("")
   const [showNewsletter, setShowNewsletter] = useState(false)
+  const [activeReview, setActiveReview] = useState(0)
 
   useEffect(() => {
     const randomQuote = motivationalQuotes[Math.floor(Math.random() * motivationalQuotes.length)]
     setCurrentQuote(randomQuote)
+    
+    // Auto-rotate reviews
+    const interval = setInterval(() => {
+      setActiveReview((prev) => (prev + 1) % reviews.length)
+    }, 5000)
+    
+    return () => clearInterval(interval)
   }, [])
-  
+
   const newsletter = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault()
     setShowNewsletter(true)
@@ -25,219 +47,330 @@ export default function HomePage() {
   const year = new Date().getFullYear()
 
   return (
-    <div className="min-h-screen home overflow-none">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 overflow-hidden">
+
       {/* Hero Section */}
-      <section className="container mx-auto px-4 py-16 text-center">
-        <div className="max-w-6xl mx-auto px-4 md:px-8 lg:px-16 py-6">
-          <div className="mb-8">
-            <div className="w-20 h-20 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center mx-auto mb-6">
-              <img src='/love.png' className=" object-conver w-20 h-20 rounded-full text-white" />
+      <section className="relative py-20 md:py-28 overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-r from-blue-500/5 to-purple-500/5" />
+        <div className="container relative mx-auto px-6">
+          <div className="max-w-4xl mx-auto text-center">
+            <div className="inline-flex items-center justify-center px-4 py-2 rounded-full bg-blue-100 text-blue-700 font-medium mb-6">
+              <Sparkles className="w-4 h-4 mr-2" />
+              Your Journey to Emotional Wellness Starts Here
             </div>
-            <h1 className="text-4xl md:text-6xl font-bold text-slate-100 mb-4">The Emotional Reset</h1>
-            <p className="text-xl md:text-2xl text-slate-100 mb-8">
-              Your space to <span className="bg-black/40 rounded-xl p-0">reconnect with your </span>mind, your feelings, and the people around you
+            <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold text-slate-900 mb-6 leading-tight">
+              Reconnect With Your
+              <span className="block bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">
+                Emotional Self
+              </span>
+            </h1>
+            <p className="text-xl text-slate-600 mb-10 max-w-2xl mx-auto leading-relaxed">
+              A comprehensive platform designed to help you understand, process, and grow through your emotions with science-backed tools and compassionate guidance.
             </p>
+            
+            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+              <Button
+                size="lg"
+                className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white shadow-lg shadow-blue-500/25 px-8 py-6 text-lg rounded-xl"
+                asChild
+              >
+                <Link href="/chatbot" className="flex items-center gap-3">
+                  <Bot className="w-6 h-6" />
+                  Start Free Assessment
+                  <ArrowRight className="w-5 h-5" />
+                </Link>
+              </Button>
+              <Button
+                size="lg"
+                variant="outline"
+                className="border-2 border-slate-300 hover:border-blue-500 text-slate-700 hover:text-blue-700 px-8 py-6 text-lg rounded-xl"
+                asChild
+              >
+                <Link href="/demo" className="flex items-center gap-2">
+                  <MessageSquare className="w-5 h-5" />
+                  Watch Demo
+                </Link>
+              </Button>
+            </div>
           </div>
+        </div>
+      </section>
 
-          {/* Daily Quote */}
-          <Card className="mb-12 bg-gradient-to-r from-blue-100 to-purple-100 border-none shadow-lg">
-            <CardContent className="p-8">
-              <div className="flex items-center justify-center mb-4">
-                <Sparkles className="w-6 h-6 text-purple-600 mr-2" />
-                <span className="text-sm font-medium text-purple-700 uppercase tracking-wide">Today's Reminder</span>
-              </div>
-              <p className="text-lg md:text-xl text-slate-700 italic leading-relaxed">"{currentQuote}"</p>
-            </CardContent>
-          </Card>
+      {/* Stats Section */}
+      <section className="py-16 bg-white">
+        <div className="container mx-auto px-6">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 max-w-4xl mx-auto">
+            {[
+              { number: "10K+", label: "Active Users", icon: Users },
+              { number: "95%", label: "Report Improvement", icon: TrendingUp },
+              { number: "24/7", label: "AI Support", icon: Bot },
+              { number: "50+", label: "Expert Tools", icon: CheckCircle }
+            ].map((stat, index) => {
+              const Icon = stat.icon
+              return (
+                <div key={index} className="text-center p-6 rounded-2xl bg-gradient-to-br from-blue-50 to-purple-50 border border-blue-100">
+                  <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <Icon className="w-6 h-6 text-white" />
+                  </div>
+                  <div className="text-3xl font-bold text-slate-900 mb-2">{stat.number}</div>
+                  <div className="text-slate-600 font-medium">{stat.label}</div>
+                </div>
+              )
+            })}
+          </div>
+        </div>
+      </section>
 
-          {/* CTA Buttons */}
-          <div className="flex flex-col sm:flex-row gap-4 justify-center mb-16">
-            <Button
-              size="lg"
-              className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white shadow-lg text-lg px-8 py-6 relative overflow-hidden group"
-              asChild
-            >
-              <Link href="/chatbot" className="flex items-center gap-3">
-                <Bot className="w-6 h-6" />
-                Talk to AI Companion
-                <Sparkles className="w-5 h-5" />
-                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -skew-x-12 -translate-x-full group-hover:translate-x-[200%] transition-transform duration-1000" />
-              </Link>
-            </Button>
-            <Button
-              size="lg"
-              variant="outline"
-              className="border-2 border-slate-100 hover:border-purple-500 text-slate-100 hover:text-purple-700 text-lg px-8 py-6 bg-transparent"
-              asChild
-            >
-              <Link href="/toolkit" className="flex items-center gap-2">
-                Start Daily Toolkit
-                <ArrowRight className="w-5 h-5" />
-              </Link>
-            </Button>
+      {/* Daily Quote Section */}
+      <section className="py-16">
+        <div className="container mx-auto px-6">
+          <div className="max-w-3xl mx-auto">
+            <Card className="border-none shadow-xl rounded-2xl overflow-hidden bg-gradient-to-r from-blue-500 to-purple-600">
+              <CardContent className="p-10 text-center">
+                <Quote className="w-12 h-12 text-white/50 mx-auto mb-6" />
+                <p className="text-2xl md:text-3xl text-white italic leading-relaxed mb-8">
+                  "{currentQuote}"
+                </p>
+                <div className="inline-flex items-center justify-center px-4 py-2 rounded-full bg-white/20 text-white">
+                  <Sparkles className="w-4 h-4 mr-2" />
+                  Daily Motivation • Refreshes Every 24 Hours
+                </div>
+              </CardContent>
+            </Card>
           </div>
         </div>
       </section>
 
       {/* Features Grid */}
-      <section className="container mx-auto px-4 py-16">
-        <div className="text-center mb-12">
-          <h2 className="text-3xl md:text-4xl font-bold text-slate-100 mb-4">Your Journey to Emotional Wellness</h2>
-          <p className="text-lg text-slate-100 max-w-2xl mx-auto">
-            Each tool is designed to help you understand yourself better, build stronger relationships, and develop the
-            emotional skills you need to thrive.
-          </p>
-        </div>
+      <section className="py-20 bg-gradient-to-b from-white to-blue-50">
+        <div className="container mx-auto px-6">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl md:text-5xl font-bold text-slate-900 mb-6">
+              Comprehensive <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">Emotional Wellness</span> Suite
+            </h2>
+            <p className="text-xl text-slate-600 max-w-3xl mx-auto">
+              Each module is scientifically designed to address different aspects of emotional intelligence and mental wellbeing.
+            </p>
+          </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
-          {features.map((feature, index) => {
-            const IconComponent = feature.icon
-            return (
-              <Card
-                key={index}
-                className="group hover:shadow-xl transition-all duration-300 hover:-translate-1-2 border-none shadow-lg relative overflow-hidden"
-                style={{
-                  backgroundImage: `url('/theme/${feature.image}')`,
-                  backgroundSize: "cover",
-                  backgroundPosition: "center",
-                }}
-              >
-                {/* Overlay */}
-                <div className="absolute inset-0 bg-black/50 z-0" />
-                <div className="relative z-10">
-                  <CardHeader className="text-center pb-4">
-                    <div
-                      className={`w-16 h-16 bg-gradient-to-r ${feature.color} rounded-full flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-300 shadow-lg`}
-                    >
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
+            {features.map((feature, index) => {
+              const IconComponent = feature.icon
+              return (
+                <Card
+                  key={index}
+                  className="group hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 border border-slate-200 rounded-2xl overflow-hidden"
+                >
+                  <CardHeader className="pb-4">
+                    <div className={`w-16 h-16 rounded-2xl bg-gradient-to-r ${feature.color} flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300`}>
                       <IconComponent className="w-8 h-8 text-white" />
                     </div>
-                    <CardTitle className="text-xl text-white group-hover:text-yellow-300 transition-colors drop-shadow">
+                    <CardTitle className="text-2xl text-slate-900 group-hover:text-blue-600 transition-colors">
                       {feature.title}
                     </CardTitle>
                   </CardHeader>
-                  <CardContent className="text-center">
-                    <p className="text-blue-100 mb-6 leading-relaxed drop-shadow">{feature.description}</p>
-                    <Button
-                      variant="outline"
-                      className="group-hover:bg-purple-50 group-hover:border-purple-300 group-hover:text-purple-700 transition-all bg-white/80 text-slate-700"
-                      asChild
-                    >
-                      <Link href={feature.href} className="flex items-center gap-2">
-                        Explore
-                        <ArrowRight className="w-4 h-4 group-hover:translate-1-1 transition-transform" />
-                      </Link>
-                    </Button>
+                  <CardContent>
+                    <p className="text-slate-600 mb-6 leading-relaxed">{feature.description}</p>
+                    <div className="flex items-center justify-between">
+                      <Button
+                        variant="ghost"
+                        className="group-hover:text-blue-600 transition-colors p-0"
+                        asChild
+                      >
+                        <Link href={feature.href} className="flex items-center gap-2">
+                          Explore Tool
+                          <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                        </Link>
+                      </Button>
+                      <span className="text-sm text-slate-500">30+ exercises</span>
+                    </div>
                   </CardContent>
+                </Card>
+              )
+            })}
+          </div>
+        </div>
+      </section>
+
+      {/* Testimonials Section */}
+      <section className="py-20 bg-white">
+        <div className="container mx-auto px-6">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl md:text-5xl font-bold text-slate-900 mb-6">
+              Trusted by <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">Thousands</span>
+            </h2>
+            <p className="text-xl text-slate-600 max-w-3xl mx-auto">
+              Real stories from people who transformed their emotional wellbeing.
+            </p>
+          </div>
+
+          <div className="max-w-4xl mx-auto">
+            <div className="relative">
+              {reviews.map((review, index) => (
+                <div
+                  key={index}
+                  className={`transition-all duration-500 ${index === activeReview ? 'opacity-100' : 'opacity-0 absolute inset-0'}`}
+                >
+                  <Card className="border-none shadow-xl rounded-2xl overflow-hidden">
+                    <CardContent className="p-10">
+                      <div className="flex items-center mb-6">
+                        <img
+                          src={review.dp}
+                          alt={review.name}
+                          className="w-16 h-16 rounded-full border-4 border-white shadow-lg"
+                        />
+                        <div className="ml-6">
+                          <h4 className="text-xl font-bold text-slate-900">{review.name}</h4>
+                          <p className="text-slate-600">{review.role}</p>
+                          <div className="flex items-center mt-2">
+                            {[...Array(5)].map((_, i) => (
+                              <Star key={i} className="w-5 h-5 text-yellow-400 fill-current" />
+                            ))}
+                          </div>
+                        </div>
+                      </div>
+                      <p className="text-lg text-slate-700 italic leading-relaxed">"{review.text}"</p>
+                    </CardContent>
+                  </Card>
                 </div>
-              </Card>
-            )
-          })}
+              ))}
+              
+              <div className="flex justify-center mt-8 space-x-2">
+                {reviews.map((_, index) => (
+                  <button
+                    key={index}
+                    onClick={() => setActiveReview(index)}
+                    className={`w-3 h-3 rounded-full transition-all ${index === activeReview ? 'bg-blue-600 w-8' : 'bg-slate-300'}`}
+                  />
+                ))}
+              </div>
+            </div>
+          </div>
         </div>
       </section>
 
-      {/* Reviews section */}
-      <section className="container mx-auto px-4 py-6 ">
-        <div className="text-center mb-12">
-          <h2 className="text-3xl md:text-4xl font-bold text-slate-100 mb-4">How our customer says about our Platform</h2>
-          <p className="text-lg text-slate-100 max-w-2xl mx-auto">
-            enjoy the the reviews our cusomers leave to get motivated. Remember life is spiritual
-          </p>
-        </div>
-        <div className="grid grid-col-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
-          {reviews.map((review, index)=>{
-            const profile = review.dp
-            return (
-              <Card
-              key={index}
-              className="group hover:shadow-lg transition-all duration-200 hover:transition-y-2 border-none shadow-lg"
+      {/* CTA Section */}
+      <section className="py-20 bg-gradient-to-r from-blue-600 to-purple-600">
+        <div className="container mx-auto px-6">
+          <div className="max-w-4xl mx-auto text-center">
+            <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
+              Ready to Start Your Emotional Journey?
+            </h2>
+            <p className="text-xl text-blue-100 mb-10 max-w-2xl mx-auto">
+              Join thousands who have found balance, understanding, and emotional resilience.
+            </p>
+            
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Button
+                size="lg"
+                className="bg-white text-blue-600 hover:bg-blue-50 px-10 py-6 text-lg rounded-xl shadow-lg"
+                asChild
               >
-
-              </Card>
-            )
-          })}
+                <Link href="/signup" className="flex items-center gap-3">
+                  Start Free Trial
+                  <ArrowRight className="w-5 h-5" />
+                </Link>
+              </Button>
+              <Button
+                size="lg"
+                variant="outline"
+                className="border-2 border-white text-white hover:bg-white/10 px-10 py-6 text-lg rounded-xl"
+                asChild
+              >
+                <Link href="/demo" className="flex items-center gap-2">
+                  Book a Demo
+                </Link>
+              </Button>
+            </div>
+            
+            <p className="text-blue-200 mt-8 text-sm">
+              No credit card required • 14-day free trial • Cancel anytime
+            </p>
+          </div>
         </div>
-
       </section>
 
-      {/* Support Section */}
-      <section className="container mx-auto px-4 pb-12">
-        <div className="relative border-none shadow-lg max-w-6xl mx-auto px-4 md:px-8 lg:px-16">
+      {/* Newsletter Section */}
+      <Newsletter />
 
-          <div className="support absolute inset-0 z-0"/>
-          <div className="absolute inset-0 bg-black/40 z-10"/>
-
-          <Card className="border-none shadow-lg bg-transparent relative z-20">
-            <CardContent className="p-6 text-center z-20">
-              <HelpCircle className="w-16 h-16 text-blue-600 mx-auto mb-6" />
-              <h3 className="text-2xl font-bold text-white mb-4">Need Additional Support?</h3>
-              <p className="text-lg text-slate-100 mb-8 leading-relaxed">
-                Remember, this journey is about progress, not perfection. If you're struggling with serious mental health
-                concerns, please don't hesitate to reach out to a mental health professional.
+      {/* Footer */}
+      <footer className="bg-slate-900 text-white pt-16 pb-8">
+        <div className="container mx-auto px-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-12 mb-12">
+            <div className="lg:col-span-2">
+              <div className="flex items-center space-x-3 mb-6">
+                <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full flex items-center justify-center">
+                  <Heart className="w-7 h-7 text-white" />
+                </div>
+                <div>
+                  <h3 className="text-2xl font-bold">Vibecare</h3>
+                  <p className="text-slate-400">Your emotional wellness partner</p>
+                </div>
+              </div>
+              <p className="text-slate-400 max-w-md">
+                Empowering individuals with science-backed tools for emotional intelligence, mental wellness, and personal growth.
               </p>
-              <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <Button variant="outline" asChild>
-                  <Link href="/help" className="flex items-center gap-2">
-                    <HelpCircle className="w-4 h-4" />
-                    Get Help & Resources
-                  </Link>
-                </Button>
-                <Button variant="outline" asChild>
-                  <Link href="/chatbot" className="flex items-center gap-2">
-                    <Bot className="w-4 h-4" />
-                    Chat VibeCareAI
-                  </Link>
-                </Button>
+            </div>
+
+            {[
+              {
+                title: "Solutions",
+                links: ["Emotional Toolkit", "AI Companion", "Relationship Tools", "Confidence Building", "Voice Therapy"]
+              },
+              {
+                title: "Resources",
+                links: ["Blog & Articles", "Research Papers", "Webinars", "Case Studies", "Help Center"]
+              },
+              {
+                title: "Company",
+                links: ["About Us", "Careers", "Contact", "Privacy Policy", "Terms of Service"]
+              }
+            ].map((column, index) => (
+              <div key={index}>
+                <h4 className="text-lg font-bold mb-6">{column.title}</h4>
+                <ul className="space-y-3">
+                  {column.links.map((link, linkIndex) => (
+                    <li key={linkIndex}>
+                      <Link href="#" className="text-slate-400 hover:text-white transition-colors">
+                        {link}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
               </div>
-            </CardContent>
-          </Card>
+            ))}
+          </div>
+
+          <div className="border-t border-slate-800 pt-8">
+            <div className="flex flex-col md:flex-row justify-between items-center">
+              <p className="text-slate-400 mb-4 md:mb-0">
+                © {year} Vibecare. All rights reserved.
+              </p>
+              <div className="flex items-center space-x-6">
+                <Link href="#" className="text-slate-400 hover:text-white transition-colors">Twitter</Link>
+                <Link href="#" className="text-slate-400 hover:text-white transition-colors">LinkedIn</Link>
+                <Link href="#" className="text-slate-400 hover:text-white transition-colors">Instagram</Link>
+                <Link href="#" className="text-slate-400 hover:text-white transition-colors">YouTube</Link>
+              </div>
+            </div>
+            
+            <div className="mt-8 text-center text-slate-500 text-sm">
+              <p>
+                Built with ❤️ by{" "}
+                <a
+                  href="https://github.com/rono1579"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-blue-400 hover:text-blue-300 underline"
+                >
+                  Rono
+                </a>
+                {" • "}Powered by Next.js & Modern Psychology
+              </p>
+            </div>
+          </div>
         </div>
-      </section>
-      <Newsletter/>
-
-        {/* Footer */}
-        <footer className="relative py-14 bg-gradient-to-r from-purple-700 via-blue-700 to-purple-800 text-white overflow-hidden shadow-2xl border-t-4 border-purple-400/40">
-
-          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[80vw] h-2 bg-gradient-to-r from-pink-400 via-purple-400 to-blue-400 blur-lg opacity-60 rounded-b-full pointer-events-none" />
-          <div className="container mx-auto px-4 text-center relative z-10">
-            <div className="flex items-center justify-center mb-8">
-              <div className="w-20 h-20 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center mr-4 shadow-lg animate-pulse">
-                <img src='/love.png' className=" object-conver w-20 h-20 rounded-full text-white" />
-              </div>
-              <div>
-                <h4 className="text-2xl font-extrabold tracking-tight drop-shadow-lg">The Emotional Reset</h4>
-                <p className="text-base text-blue-100 font-medium">Your space to reconnect</p>
-              </div>
-            </div>
-            <div className="flex flex-wrap justify-center gap-6 mb-8">
-              <Link href="/toolkit" className="transition-all duration-200 text-lg font-semibold px-4 py-2 rounded hover:bg-white/10 hover:text-yellow-300 focus:outline-none focus:ring-2 focus:ring-yellow-400">Daily Toolkit</Link>
-              <Link href="/emotions" className="transition-all duration-200 text-lg font-semibold px-4 py-2 rounded hover:bg-white/10 hover:text-yellow-300 focus:outline-none focus:ring-2 focus:ring-yellow-400">Emotions</Link>
-              <Link href="/empathy" className="transition-all duration-200 text-lg font-semibold px-4 py-2 rounded hover:bg-white/10 hover:text-yellow-300 focus:outline-none focus:ring-2 focus:ring-yellow-400">Empathy</Link>
-              <Link href="/relationships" className="transition-all duration-200 text-lg font-semibold px-4 py-2 rounded hover:bg-white/10 hover:text-yellow-300 focus:outline-none focus:ring-2 focus:ring-yellow-400">Relationships</Link>
-              <Link href="/confidence" className="transition-all duration-200 text-lg font-semibold px-4 py-2 rounded hover:bg-white/10 hover:text-yellow-300 focus:outline-none focus:ring-2 focus:ring-yellow-400">Confidence</Link>
-              <Link href="/voice" className="transition-all duration-200 text-lg font-semibold px-4 py-2 rounded hover:bg-white/10 hover:text-yellow-300 focus:outline-none focus:ring-2 focus:ring-yellow-400">Voice</Link>
-              <Link href="/help" className="transition-all duration-200 text-lg font-semibold px-4 py-2 rounded hover:bg-white/10 hover:text-yellow-300 focus:outline-none focus:ring-2 focus:ring-yellow-400">Help</Link>
-            </div>
-            <p className="text-blue-100 mb-2 text-lg font-medium font-inter">
-              Take your time. Be gentle with yourself. You're doing better than you think.
-            </p>
-            <p className="text-blue-200 text-sm">💙 Built with care for your emotional wellness journey</p>
-          </div>
-          <div className="absolute -bottom-10 left-10 w-40 h-40 bg-pink-400/30 rounded-full blur-2xl pointer-events-none" />
-          <div className="absolute -top-10 right-10 w-32 h-32 bg-blue-400/20 rounded-full blur-2xl pointer-events-none" />
-          <div className="bg-gradient-to-r from-black/80 via-slate-900/80 to-black/80 absolute bottom-0 left-0 w-full flex justify-center items-center shadow-inner">
-            <p className="py-3 text-sm text-slate-200 tracking-wide">
-              &copy; All rights reserved @{year} | Built by{" "}
-              <a
-                href="http://mwaura-fredrick.vercel.app"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="underline text-yellow-300 hover:text-yellow-400 transition-colors"
-              >
-                Fredrick Mwaura
-              </a> and Nextjs
-            </p>
-          </div>
-        </footer> 
+      </footer>
     </div>
   )
 }
